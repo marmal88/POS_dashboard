@@ -36,8 +36,6 @@ yearlist = {x: x for x in range(min(df['YYYY']), max(df['YYYY'])+1)} # For range
 df['MM'] = df['MM'].astype('int64')
 df['CustomerPrefix'] = df['CustomerID'].str[:2]
 finmetrics = ['Quantity', 'Revenue', 'Profit', 'Cost']
-# print(df.head())
-# print(df.info())
 
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
@@ -246,7 +244,8 @@ def updategraph3(cust, year):
 
 #----------------------------------
 if __name__=='__main__':
-    app.run_server(debug=False)
+    app.run_server(port=8888, host='0.0.0.0', debug=True)
+    # app.run_server(debug=False)
 
 '''
 Insights from Data
