@@ -42,7 +42,7 @@ pip install -r requirements.txt
 To directly deploy the interface
 
 ```bash
-python -m flask run
+python -m pos-dashboard
 ```
 
 ## Insights from Data
