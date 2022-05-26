@@ -1,8 +1,5 @@
 
 import pytest
-import chromedriver_autoinstaller
-from selenium import webdriver
-from selenium.webdriver.remote.webdriver import WebDriver
 from dash.testing.application_runners import import_app
 
 # driver = webdriver.Chrome(r'tests/chromedriver.exe')
