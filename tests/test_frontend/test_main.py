@@ -1,27 +1,16 @@
 import pytest
 from dash.testing.application_runners import import_app
+from selenium.webdriver.common.by import By
 
-# driver = webdriver.Chrome(r'tests/chromedriver.exe')
-
-
-# def test__tstm001_elementtest(browser):
-#     browser.get('https://google.com')
-#     query_window = browser.find_element_by_name('q')
-#     assert query_window.is_displayed()
-
-
-def test__tstm001_elementtest(dash_duo):
+def test__tstm001_element_test_h1(dash_duo):
     """Testing for element H1 in dash frontend
     """
     app = import_app("index")
     dash_duo.start_server(app)
-    dash_duo.wait_for_text_to_equal(
-        "h1", "Dashboard Analysis for Web Assignment", timeout=4
-    )
-    assert dash_duo.find_element("h1").text == "Dashboard Analysis for Web Assignment"
+    assert dash_duo.driver.find_element(By.TAG_NAME, "h1").text == "Dashboard Analysis for Web Assignment"
 
 
-def test__tstm002_elementtest(dash_duo):
+def test__tstm002_element_test_h6(dash_duo):
     """testing for element H6 in dash frontend
     """
     app = import_app("index")
@@ -36,6 +25,13 @@ def test__tstm002_elementtest(dash_duo):
         == "To ensure optimal display, please ensure all interactive elements have at least 1 option chosen"
     )
 
+# driver = webdriver.Chrome(r'tests/chromedriver.exe')
+
+
+# def test__tstm001_elementtest(browser):
+#     browser.get('https://google.com')
+#     query_window = browser.find_element_by_name('q')
+#     assert query_window.is_displayed()
     # dash_duo.wait_for_text_to_equal("#dropdown2", "10002", timeout=5)
     # assert dash_duo.find_element("#dropdown2").text == '10002'
     # WebDriverWait(dash_duo.driver, 10).until(

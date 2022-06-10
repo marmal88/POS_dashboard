@@ -22,11 +22,9 @@ yearlist = {
 df["MM"] = df["MM"].astype("int64")
 df["CustomerPrefix"] = df["CustomerID"].str[:2]
 finmetrics = ["Profit", "Cost", "Revenue", "Quantity"]
-# print(df.head())
-# print(df.info())
 
 
-app = dash.Dash(name="pos-dashboard", external_stylesheets=[dbc.themes.MINTY])
+app = dash.Dash(name='pos-dashboard', external_stylesheets=[dbc.themes.MINTY])
 # ----------------------------------
 app.layout = dbc.Container(
     [
@@ -41,7 +39,8 @@ app.layout = dbc.Container(
         dbc.Row(
             dbc.Col(
                 html.H6(
-                    "To ensure optimal display, please ensure all interactive elements have at least 1 option chosen",
+                    "To ensure optimal display, please ensure all "
+                    "interactive elements have at least 1 option chosen",
                     className="mb-4",
                 ),
                 width=12,
@@ -51,7 +50,8 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    html.H4("Overall Financial Metrics By Year", className="mb-4"),
+                    html.H4("Overall Financial Metrics By Year",
+                            className="mb-4"),
                     width=12,
                 )
             ]
@@ -74,11 +74,13 @@ app.layout = dbc.Container(
                 ),
                 dbc.Col(
                     [
-                        html.H6("Please Select Financial Metric", className="mb-4"),
+                        html.H6("Please Select Financial Metric",
+                                className="mb-4"),
                         dcc.Dropdown(
                             id="dropdown4",
                             value="Profit",
-                            options=[{"label": x, "value": x} for x in finmetrics],
+                            options=[{"label": x, "value": x}
+                                     for x in finmetrics],
                         ),
                     ],
                     width=3,
@@ -91,7 +93,8 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    html.H4("Compare Product Performance Over Time", className="mb-4"),
+                    html.H4("Compare Product Performance Over Time",
+                            className="mb-4"),
                     width=12,
                 )
             ]
@@ -119,18 +122,21 @@ app.layout = dbc.Container(
             [
                 dbc.Col(
                     [
-                        html.H6("Please Select Financial Metric", className="mb-4"),
+                        html.H6("Please Select Financial Metric",
+                                className="mb-4"),
                         dcc.Dropdown(
                             id="dropdown3",
                             value="Profit",
-                            options=[{"label": x, "value": x} for x in finmetrics],
+                            options=[{"label": x, "value": x}
+                                     for x in finmetrics],
                         ),
                     ],
                     width=3,
                 ),
                 dbc.Col(
                     [
-                        html.H6("Please Select Payment Type", className="mb-4"),
+                        html.H6("Please Select Payment Type",
+                                className="mb-4"),
                         dcc.Dropdown(
                             id="dropdown1",
                             value="Credit",
@@ -158,7 +164,8 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(
-                    html.H4("Compare Customer Buying Behavior", className="mb-4"),
+                    html.H4("Compare Customer Buying Behavior",
+                            className="mb-4"),
                     width=12,
                 )
             ]
@@ -229,21 +236,35 @@ app.layout = dbc.Container(
     Input(component_id="dropdown4", component_property="value"),
 )
 def updategraph1(year, finmetric):
+    """Populate Barchart showing performance
+    Args:
+        year (integer): Dates(YYYY) to slice dataframe
+        finmetric (string): Type of financial metrics to show [profit, cost, revenue quantity]
+    Returns:
+        graph1: Barchart
+    """
     df1 = df[(df["YYYY"] >= year[0]) & (df["YYYY"] <= year[1])]
-    df1 = df1.groupby(["Year", "Type"], as_index=False)[finmetric].sum().round()
-    barplt = px.bar(
+    df1 = df1.groupby(["Year", "Type"], as_index=False)[
+        finmetric].sum().round()
+    graph1 = px.bar(
         df1, x="Year", y=finmetric, title=f"Total {finmetric} in {year[0]}-{year[1]}"
     )
-    return barplt
+    return graph1
 
 
-# Callback for for Selected Product Performance Comparison
 # dropdown1 to dependent dropdown2
 @app.callback(
     Output("dropdown2", "options"),
     Input("dropdown1", "value"),
 )
 def drop1todrop2(val1):
+    """Callback for for Selected Product Performance Comparison
+    Args:
+        val1 (string): Payment type
+    Returns:
+        label: label for product id
+        value: value for product id
+    """
     df2 = df[df["Type"] == val1]
     return [{"label": x, "value": x} for x in sorted(df2["ProductID"].unique())]
 
@@ -251,6 +272,12 @@ def drop1todrop2(val1):
 # Populate for dependant dropdown2
 @app.callback(Output("dropdown2", "value"), Input("dropdown2", "options"))
 def popdropdown2(availableoptions):
+    """Dependent callback for dropdown2 
+    Args:
+        availableoptions (dict): list of productID values
+    Returns:
+        availableoptions: ProductID value
+    """
     return availableoptions[0]["value"]
 
 
@@ -263,21 +290,38 @@ def popdropdown2(availableoptions):
     Input("dropdown3", "value"),
 )
 def updategraph2(year, type, productid, finmetrics):
+    """Populate Barchart
+    Args:
+        year (int): Dates(YYYY) to slice dataframe
+        type (string): CASH or CASHSALE customer
+        productid (int): productID values
+        finmetrics (string): Type of financial metrics to show [profit, cost, revenue quantity]
+    Returns:
+        fig1: Barchart
+    """
     df3 = df[(df["YYYY"] >= year[0]) & (df["YYYY"] <= year[1])]
     if isinstance(productid, int):
         df3 = df3[(df3["Type"] == type) & (df3["ProductID"] == productid)]
     else:
         df3 = df3[
-            (df3["Type"] == type) & (df3["ProductID"].isin([int(x) for x in productid]))
+            (df3["Type"] == type) & (
+                df3["ProductID"].isin([int(x) for x in productid]))
         ]
-    df3 = df3.groupby(["Year", "Type"], as_index=False)[finmetrics].mean().round()
+    df3 = df3.groupby(["Year", "Type"], as_index=False)[
+        finmetrics].mean().round()
     fig1 = px.bar(df3, x="Year", y=finmetrics, color=finmetrics)
     return fig1
 
 
-# Call Back for Selected Customer Buying Behaviour
 @app.callback(Output("dropdown6", "options"), Input("dropdown5", "value"))
 def drop1todrop2(prefixval):
+    """Call Back for Selected Customer Buying Behaviour
+    Args:
+        prefixval (dict): Customer Prefix values
+    Returns:
+        label: customer prefix labels
+        value: customer prefix values
+    """
     if isinstance(prefixval, str):
         df5 = df[df["CustomerPrefix"] == prefixval]
     else:
@@ -294,9 +338,17 @@ def popdropdown2(availableoptions1):
 
 # Graph
 @app.callback(
-    Output("graph3", "figure"), Input("dropdown6", "value"), Input("dropdown7", "value")
+    Output("graph3", "figure"), Input(
+        "dropdown6", "value"), Input("dropdown7", "value")
 )
 def updategraph3(cust, year):
+    """Display Graph3 Quantity
+    Args:
+        cust (string): Customer ID
+        year (int): Dates(YYYY) to slice dataframe
+    Returns:
+        fig3: Barchart
+    """
     if isinstance(cust, str):
         df4 = df[(df["CustomerID"] == cust) & (df["YYYY"].isin(year))]
     else:
@@ -321,9 +373,17 @@ def updategraph3(cust, year):
 
 
 @app.callback(
-    Output("graph4", "figure"), Input("dropdown6", "value"), Input("dropdown7", "value")
+    Output("graph4", "figure"), Input(
+        "dropdown6", "value"), Input("dropdown7", "value")
 )
-def updategraph3(cust, year):
+def updategraph4(cust, year):
+    """Display Graph4 Profit
+    Args:
+        cust (string): Customer ID
+        year (int): Dates(YYYY) to slice dataframe
+    Returns:
+        fig4: Barchart
+    """
     if isinstance(cust, str):
         df4 = df[(df["CustomerID"] == cust) & (df["YYYY"].isin(year))]
     else:
@@ -348,9 +408,17 @@ def updategraph3(cust, year):
 
 
 @app.callback(
-    Output("graph5", "figure"), Input("dropdown6", "value"), Input("dropdown7", "value")
+    Output("graph5", "figure"), Input(
+        "dropdown6", "value"), Input("dropdown7", "value")
 )
-def updategraph3(cust, year):
+def updategraph5(cust, year):
+    """Display Graph 5 Revenue
+    Args:
+        cust (string): Customer ID
+        year (int): Dates(YYYY) to slice dataframe
+    Returns:
+        fig5: Barchart
+    """
     if isinstance(cust, str):
         df4 = df[(df["CustomerID"] == cust) & (df["YYYY"].isin(year))]
     else:
@@ -375,9 +443,17 @@ def updategraph3(cust, year):
 
 
 @app.callback(
-    Output("graph6", "figure"), Input("dropdown6", "value"), Input("dropdown7", "value")
+    Output("graph6", "figure"), Input(
+        "dropdown6", "value"), Input("dropdown7", "value")
 )
-def updategraph3(cust, year):
+def updategraph6(cust, year):
+    """Display graph6 Cost
+    Args:
+        cust (string): Customer ID
+        year (int): Dates(YYYY) to slice dataframe
+    Returns:
+        fig6: Barchart
+    """
     if isinstance(cust, str):
         df4 = df[(df["CustomerID"] == cust) & (df["YYYY"].isin(year))]
     else:
