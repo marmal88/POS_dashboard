@@ -22,8 +22,6 @@ yearlist = {
 df["MM"] = df["MM"].astype("int64")
 df["CustomerPrefix"] = df["CustomerID"].str[:2]
 finmetrics = ["Profit", "Cost", "Revenue", "Quantity"]
-# print(df.head())
-# print(df.info())
 
 
 app = dash.Dash(name='pos-dashboard', external_stylesheets=[dbc.themes.MINTY])

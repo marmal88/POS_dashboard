@@ -1,4 +1,3 @@
-
 import pytest
 from dash.testing.application_runners import import_app
 
@@ -15,9 +14,23 @@ def test__tstm001_elementtest(dash_duo):
     app = import_app("index")
     dash_duo.start_server(app)
     dash_duo.wait_for_text_to_equal(
-        "h1", "Dashboard Analysis for Web Assignment", timeout=4)
-    assert dash_duo.find_element(
-        "h1").text == "Dashboard Analysis for Web Assignment"
+        "h1", "Dashboard Analysis for Web Assignment", timeout=4
+    )
+    assert dash_duo.find_element("h1").text == "Dashboard Analysis for Web Assignment"
+
+
+def test__tstm002_elementtest(dash_duo):
+    app = import_app("index")
+    dash_duo.start_server(app)
+    dash_duo.wait_for_text_to_equal(
+        "h6",
+        "To ensure optimal display, please ensure all interactive elements have at least 1 option chosen",
+        timeout=4,
+    )
+    assert (
+        dash_duo.find_element("h6").text
+        == "To ensure optimal display, please ensure all interactive elements have at least 1 option chosen"
+    )
 
     # dash_duo.wait_for_text_to_equal("#dropdown2", "10002", timeout=5)
     # assert dash_duo.find_element("#dropdown2").text == '10002'
