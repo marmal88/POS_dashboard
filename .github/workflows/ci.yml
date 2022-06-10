@@ -33,6 +33,7 @@ jobs:
         python-version: [3.7.10]
     steps:
     - uses: actions/checkout@v3
+    - uses: nanasess/setup-chromedriver@master 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
