@@ -25,7 +25,7 @@ jobs:
     - name: Lint pylint
       run: |
         export PYTHONPATH=${PWD}
-        pylint --fail-under=5 ${PWD}/src ${PWD}/tests
+        pylint --fail-under=7 ${PWD}/src ${PWD}/tests
   unit-tests:
     runs-on: ubuntu-latest
     strategy:
@@ -42,7 +42,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest
-        export PATH=$PATH:/tests/test_frontend/chromedriver.exe
+        export PATH=${PATH}/tests/test_frontend/chromedriver.exe
     - name: run unit tests
       run: |
         python -m pytest
