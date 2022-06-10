@@ -42,7 +42,7 @@ pip install -r requirements.txt
 To directly deploy the interface
 
 ```bash
-python -m pos-dashboard
+python src/pos-dashboard.py
 ```
 
 ## Insights from Data
