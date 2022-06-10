@@ -33,7 +33,7 @@ jobs:
         python-version: [3.7.10]
     steps:
     - uses: actions/checkout@v3
-    - uses: nanasess/setup-chromedriver@v1 #
+    - uses: nanasess/setup-chromedriver@master #
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -44,8 +44,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest
-        chromedriver --url-base=/wd/hub &
     - name: run unit tests
       run: |
+        google-chrome --version
+        export DISPLAY=:99
+        chromedriver --url-base=/wd/hub &
+         sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional, disables headless mode
         python -m pytest
 
