@@ -11,6 +11,8 @@ from dash.testing.application_runners import import_app
 
 
 def test__tstm001_elementtest(dash_duo):
+    """Testing for element H1 in dash frontend
+    """
     app = import_app("index")
     dash_duo.start_server(app)
     dash_duo.wait_for_text_to_equal(
@@ -20,6 +22,8 @@ def test__tstm001_elementtest(dash_duo):
 
 
 def test__tstm002_elementtest(dash_duo):
+    """testing for element H6 in dash frontend
+    """
     app = import_app("index")
     dash_duo.start_server(app)
     dash_duo.wait_for_text_to_equal(
